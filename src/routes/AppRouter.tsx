@@ -1,13 +1,13 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
-import Page404 from "../pages/error/Page404.tsx"; // 404 page
-
+import Page404 from "../pages/error/Page404"; // 404 page
+import BaseTemplate from "@/components/layout/BaseTemplate";
 /* ----------------------------------------------------------------------------
  *  Lazy‑loaded pages (code‑splitting)
  * ------------------------------------------------------------------------- */
 // const Dashboard      = lazy(() => import("@/pages/Dashboard"));
-// const ClientsList    = lazy(() => import("@/features/clients/ClientsList"));
+const ClientsList    = lazy(() => import("@/pages/clients/ClientsList"));
 // const ClientForm     = lazy(() => import("@/features/clients/ClientForm"));
 // const UsersList      = lazy(() => import("@/features/users/UsersList"));
 // const UserForm       = lazy(() => import("@/features/users/UserForm"));
@@ -43,9 +43,26 @@ const AppRouter: React.FC = () => (
       <Routes>
         {/* Public routes ---------------------------------------------------- */}
         {/* <Route path="/login" element={lazyWrap(() => import("@/pages/Login"))} /> */}
+ <Route path="clients" element={<BaseTemplate disableCustomTheme />}>
+            { <Route index element={<ClientsList />} />
+            /*<Route path="new" element={<ClientForm key="new" />} />
+            <Route path=":id" element={<ClientForm />} /> */}
+          </Route>
+        {/* Protected app ---------------------------------------------------- */}
+        <Route element={<PrivateRoute><BaseTemplate /></PrivateRoute>}>
+          {/* <Route index element={<Dashboard />} /> */}
+
+         
+
+          <Route path="users">
+            {/* <Route index element={<UsersList />} />
+            <Route path="new" element={<UserForm key="new" />} />
+            <Route path=":id" element={<UserForm />} /> */}
+          </Route>
 
           {/* 404 inside authenticated shell */}
           <Route path="*" element={<Page404 />} />
+        </Route>
       </Routes>
     </Suspense>
   </BrowserRouter>
