@@ -3,11 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import Page404 from "../pages/error/Page404"; // 404 page
 import BaseTemplate from "@/components/layout/BaseTemplate";
+import EmployeesList from "@/pages/employees/EmployeesList";
 /* ----------------------------------------------------------------------------
  *  Lazy‑loaded pages (code‑splitting)
  * ------------------------------------------------------------------------- */
 // const Dashboard      = lazy(() => import("@/pages/Dashboard"));
-const ClientsList    = lazy(() => import("@/pages/clients/ClientsList"));
+const ClientsList = lazy(() => import("@/pages/clients/ClientsList"));
 // const ClientForm     = lazy(() => import("@/features/clients/ClientForm"));
 // const UsersList      = lazy(() => import("@/features/users/UsersList"));
 // const UserForm       = lazy(() => import("@/features/users/UserForm"));
@@ -21,7 +22,9 @@ const ClientsList    = lazy(() => import("@/pages/clients/ClientsList"));
 /* ----------------------------------------------------------------------------
  *  Auth guard (simple example)
  * ------------------------------------------------------------------------- */
-interface GuardProps { children: React.ReactElement }
+interface GuardProps {
+  children: React.ReactElement;
+}
 const PrivateRoute: React.FC<GuardProps> = ({ children }) => {
   const isLoggedIn = !!localStorage.getItem("token"); // <‑‑ replace with real auth hook
   return isLoggedIn ? children : <Navigate to="/login" replace />;
@@ -39,20 +42,35 @@ const Loading: React.FC = () => (
  * ------------------------------------------------------------------------- */
 const AppRouter: React.FC = () => (
   <BrowserRouter>
-    <Suspense fallback={<Loading />}> {/* fallback shown for every lazy chunk */}
+    <Suspense fallback={<Loading />}>
+      {" "}
+      {/* fallback shown for every lazy chunk */}
       <Routes>
         {/* Public routes ---------------------------------------------------- */}
         {/* <Route path="/login" element={lazyWrap(() => import("@/pages/Login"))} /> */}
- <Route path="clients" element={<BaseTemplate disableCustomTheme />}>
-            { <Route index element={<ClientsList />} />
+        <Route path="clients" element={<BaseTemplate disableCustomTheme />}>
+          {
+            <Route index element={<ClientsList />} />
             /*<Route path="new" element={<ClientForm key="new" />} />
-            <Route path=":id" element={<ClientForm />} /> */}
-          </Route>
+            <Route path=":id" element={<ClientForm />} /> */
+          }
+        </Route>
+        <Route path="employees" element={<BaseTemplate disableCustomTheme />}>
+          {
+            <Route index element={<EmployeesList />} />
+            /*<Route path="new" element={<ClientForm key="new" />} />
+            <Route path=":id" element={<ClientForm />} /> */
+          }
+        </Route>
         {/* Protected app ---------------------------------------------------- */}
-        <Route element={<PrivateRoute><BaseTemplate /></PrivateRoute>}>
+        <Route
+          element={
+            <PrivateRoute>
+              <BaseTemplate />
+            </PrivateRoute>
+          }
+        >
           {/* <Route index element={<Dashboard />} /> */}
-
-         
 
           <Route path="users">
             {/* <Route index element={<UsersList />} />
@@ -72,7 +90,9 @@ export default AppRouter;
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /** Helper to lazy‑load a single component w/out repetition */
-function lazyWrap(factory: () => Promise<{ default: React.ComponentType<any> }>) {
+function lazyWrap(
+  factory: () => Promise<{ default: React.ComponentType<any> }>
+) {
   const Page = lazy(factory);
   return <Page />;
 }
