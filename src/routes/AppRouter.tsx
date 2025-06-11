@@ -49,21 +49,21 @@ const AppRouter: React.FC = () => (
       <Routes>
         {/* Public routes ---------------------------------------------------- */}
         {/* <Route path="/login" element={lazyWrap(() => import("@/pages/Login"))} /> */}
-        <Route path="staffing" element={<BaseTemplate disableCustomTheme />}>
+        <Route path="staffing" element={<BaseTemplate />}>
           {
             <Route index element={<StaffingList />} />
             /*<Route path="new" element={<ClientForm key="new" />} />
             <Route path=":id" element={<ClientForm />} /> */
           }
         </Route>
-        <Route path="clients" element={<BaseTemplate disableCustomTheme />}>
+        <Route path="clients" element={<BaseTemplate />}>
           {
             <Route index element={<ClientsList />} />
             /*<Route path="new" element={<ClientForm key="new" />} />
             <Route path=":id" element={<ClientForm />} /> */
           }
         </Route>
-        <Route path="employees" element={<BaseTemplate disableCustomTheme />}>
+        <Route path="employees" element={<BaseTemplate />}>
           {
             <Route index element={<EmployeesList />} />
             /*<Route path="new" element={<ClientForm key="new" />} />

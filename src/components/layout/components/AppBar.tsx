@@ -14,6 +14,10 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from ".././ColorModeIconDropdown";
 import Sitemark from "./SitemarkIcon";
 import { useNavigate } from "react-router-dom";
+import DarkModeDropdown from "./DarkModeDropdown";
+import { useColorScheme } from "@mui/material/styles";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -34,15 +38,19 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { mode, setMode } = useColorScheme();
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  // const toggleDrawer = (newOpen: boolean) => () => {
+  //   setOpen(newOpen);
+  // };
 
   const go = (path: string) => () => {
     navigate(path);
     setOpen(false);
   };
+
+  const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen);
+  const handleThemeToggle = () => setMode(mode === "light" ? "dark" : "light");
 
   return (
     <AppBar
@@ -62,13 +70,28 @@ export default function AppAppBar() {
           >
             <Sitemark />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button variant="text" color="info" size="small" onClick={go("/staffing")}>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={go("/staffing")}
+              >
                 Staffing
               </Button>
-              <Button variant="text" color="info" size="small" onClick={go("/clients")}>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={go("/clients")}
+              >
                 Clients
               </Button>
-              <Button variant="text" color="info" size="small" onClick={go("/employees")}>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={go("/employees")}
+              >
                 Employees
               </Button>
             </Box>
@@ -88,46 +111,32 @@ export default function AppAppBar() {
             </Button>
             <ColorModeIconDropdown />
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
-            <ColorModeIconDropdown size="medium" />
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="top"
-              open={open}
-              onClose={toggleDrawer(false)}
-              PaperProps={{
-                sx: {
-                  top: "var(--template-frame-height, 0px)",
-                },
-              }}
-            >
-              <Box sx={{ p: 2, backgroundColor: "background.default" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
+
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <Drawer anchor="top" open={open} onClose={toggleDrawer(false)}>
+              <Box sx={{ p: 2, bgcolor: "background.default" }}>
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
-                <Divider sx={{ my: 3 }} />
+                <MenuItem onClick={go("/staffing")}>Staffing</MenuItem>
+                <MenuItem onClick={go("/clients")}>Clients</MenuItem>
+                <MenuItem onClick={go("/employees")}>Employees</MenuItem>
+                <Divider sx={{ my: 2 }} />
                 <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
+                  <Button fullWidth onClick={go("/signup")}>
                     Sign up
                   </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
+                  <Button fullWidth onClick={go("/signin")}>
                     Sign in
                   </Button>
                 </MenuItem>
