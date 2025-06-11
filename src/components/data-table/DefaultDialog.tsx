@@ -1,5 +1,5 @@
-import { BaseDialogProps, DialogConfig } from './BaseCustomDialogTypes';
-import BaseCustomDialog from './BaseCustomDialog';
+import { BaseDialogProps, DialogConfig } from "./BaseCustomDialogTypes";
+import BaseCustomDialog from "./BaseCustomDialog";
 
 /**
  * A concrete implementation of BaseCustomDialog that renders a configurable form dialog.
@@ -28,7 +28,9 @@ import BaseCustomDialog from './BaseCustomDialog';
  *
  * @public
  */
-export class DefaultDialog<T extends { id?: string | number | undefined; }> extends BaseCustomDialog<T> {
+export class DefaultDialog<
+  T extends { id?: string | number | undefined }
+> extends BaseCustomDialog<T> {
   getConfig() {
     return (this.props as DefaultDialogProps<T>).config;
   }
@@ -36,7 +38,7 @@ export class DefaultDialog<T extends { id?: string | number | undefined; }> exte
 
 /**
  * Props for the DefaultDialog component.
- * 
+ *
  * @typeParam T - The type/interface of the form data being handled
  */
 interface DefaultDialogProps<T> extends BaseDialogProps<T> {

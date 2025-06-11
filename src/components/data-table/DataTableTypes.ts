@@ -45,7 +45,7 @@ export interface DataTableConfig<T> {
   /** Custom label for the add button */
   addButtonLabel?: string;
 
-  /** 
+  /**
    * Configuration for the integrated form dialog
    * @see DialogConfig
    */

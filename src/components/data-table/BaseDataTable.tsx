@@ -5,6 +5,12 @@ import { DataTableConfig } from "./DataTableTypes";
 import { DefaultDialog } from "./DefaultDialog";
 import { AbstractEntity } from "@/types/abstract-entity";
 
+/**
+ * Abstract base class that renders a configurable data table with built-in "Add" and "Edit"
+ * capabilities via a modal dialog.
+ *
+ * @template T - The entity type for rows, extending an object with an `id` property.
+ */
 export abstract class BaseDataTable<
   T extends { id: any }
 > extends React.Component<
@@ -17,11 +23,22 @@ export abstract class BaseDataTable<
     error: string | null;
   }
 > {
-  // Abstract methods to be implemented by child classes
+  /**
+   * Returns the configuration for the data table and its associated dialog.
+   *
+   * @returns A {@link DataTableConfig} describing columns, dialog behavior, and more.
+   */
   abstract getConfig(): DataTableConfig<T>;
+
+  /**
+   * Handles form submission for creating or updating an item.
+   *
+   * @param item - The entity instance to create or update.
+   * @returns A promise that resolves when the operation completes.
+   */
   abstract handleSubmit(item: AbstractEntity): Promise<void>;
 
-  // Initial state
+  /** Component state initialization. */
   state = {
     rows: [] as T[],
     formOpen: false,
@@ -30,19 +47,37 @@ export abstract class BaseDataTable<
     error: null as string | null,
   };
 
+  /**
+   * Lifecycle: initialize table rows from `getConfig().initialRows` after mount.
+   */
   componentDidMount() {
-    // Initialize with config data
     const { initialRows } = this.getConfig();
     this.setState({ rows: initialRows });
   }
 
-  // Common handlers
+  /**
+   * Opens the dialog for creating a new item.
+   */
   handleAdd = () => this.setState({ formOpen: true, currentItem: null });
+
+  /**
+   * Opens the dialog for editing an existing item.
+   *
+   * @param item - The row item to edit.
+   */
   handleEdit = (item: T) =>
     this.setState({ formOpen: true, currentItem: item });
+
+  /**
+   * Closes the form dialog without saving.
+   */
   handleClose = () => this.setState({ formOpen: false });
 
-  // Render the form dialog
+  /**
+   * Renders the dialog component for add/edit operations.
+   *
+   * @returns A {@link DefaultDialog} configured via `getConfig().dialogConfig`.
+   */
   renderForm() {
     const config = this.getConfig();
     return (
@@ -56,7 +91,9 @@ export abstract class BaseDataTable<
     );
   }
 
-  // Main render method
+  /**
+   * Main render method: displays header, add-button, DataGrid, and the add/edit dialog.
+   */
   render() {
     const config = this.getConfig();
     const { rows, loading } = this.state;
