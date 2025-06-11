@@ -1,118 +1,93 @@
-// src/pages/clients/ClientsList.tsx
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import { ClientDTO } from "@/types/client-entity";
 import EditIcon from "@mui/icons-material/Edit";
-import ClientForm, { dummyClient } from "@/components/clients-popup";
+import {mockClient} from "@/MockData";
+import BaseDataTable from "@/components/data-table/BaseDataTable";
+import { DataTableConfig } from "@/components/data-table/DataTableTypes";
+import { AbstractEntity } from "@/types/abstract-entity";
 
-/**
- * Empty Clients page with header and a MUI DataGrid placeholder
- */
-const ClientsList: React.FC = () => {
-  const [formOpen, setFormOpen] = React.useState(false);
-  const [currentClient, setCurrentClient] = React.useState<ClientDTO | null>(
-    null
-  );
-
-  // Define columns (adjust as needed)
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 100 },
-    { field: "clientName", headerName: "Client Name", flex: 1 },
-    { field: "clientEmail", headerName: "Client Email", flex: 1 },
-    { field: "contactPersonName", headerName: "Contact Person", flex: 1 },
-    { field: "contactPersonEmail", headerName: "Contact Email", flex: 1 },
-    { field: "contactPersonPhone", headerName: "Contact Phone", flex: 1 },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      width: 100,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          onClick={() => handleEditClient(params.row)}
-        />,
-      ],
-    },
-  ];
-
-  // Empty rows for now
-  const rows = [dummyClient];
-
-  console.log("ClientsList rendered");
-
-  const handleAddClient = () => {
-    setCurrentClient(null);
-    setFormOpen(true);
-  };
-
-  const handleEditClient = (client: ClientDTO) => {
-    setCurrentClient(client);
-    setFormOpen(true);
-  };
-
-  const handleSubmit = (client: ClientDTO) => {
-    if (client.id) {
-      // Update existing client
-      console.log("Updating client:", client);
-    } else {
-      // Add new client
-      console.log("Adding new client:", client);
-    }
-  };
-
-  return (
-    <Box sx={{ height: "100%", width: "100%" }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Clients
-      </Typography>
-      <Box sx={{ mb: 2, display: "flex", gap: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleAddClient}>
-          Add Client
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => handleEditClient(dummyClient)}
-          startIcon={<EditIcon />}
-        >
-          Edit Dummy Client
-        </Button>
-      </Box>
-
-
-      <Box sx={{ height: 600, width: "100%", mt: 2 }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 10 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 25]}
-          disableRowSelectionOnClick
-          sx={{
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "rgba(0, 91, 150, 0.1)"
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "1px solid rgba(224, 224, 224, 0.5)",
-            },
-          }}
-        />
-      </Box>
-
-
-      <ClientForm
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-        onSubmit={handleSubmit}
-        initialData={currentClient ?? undefined}
-      />
-    </Box>
-  );
-};
-
-export default ClientsList;
+export default class ClientsList extends BaseDataTable<ClientDTO> {
+  getConfig(): DataTableConfig<ClientDTO> {
+    return {
+      title: "Clients",
+      initialRows: [mockClient],
+      columns: this.buildColumns(),
+      addButtonLabel: "Add Client",
+      pageSizeOptions: [5, 10, 25],
+      defaultPageSize: 10,
+      dialogConfig: {
+        fields: [
+          {
+            name: "clientEmail",
+            label: "Client name",
+            required: true,
+            autoFocus: true,
+          },
+          {
+            name: "clientName",
+            label: "Client email",
+            required: true,
+          },
+          {
+            name: "contactPersonName",
+            label: "Contact Person Name",
+            required: true,
+          },
+          {
+            name: "contactPersonEmail",
+            label: "Contact Pperson Email",
+            required: true,
+          },
+          {
+            name: "contactPersonPhone",
+            label: "Contact Person Phone",
+            required: true,
+          },
+        ],
+        validate: (item) => {
+          const errors: Record<string, string> = {};
+          if (!item.clientName) errors.firstName = "This field is required";
+          if (!item.contactPersonName)
+            errors.contactPersonName = "This field is required";
+          if (!item.contactPersonEmail)
+            errors.contactPersonEmail = "This field is required";
+          if (!item.contactPersonPhone)
+            errors.contactPersonPhone = "This field is required";
+          if (!/^\S+@\S+\.\S+$/.test(item.clientEmail ?? ""))
+            errors.email = "Enter a valid email address";
+          if (!/^\S+@\S+\.\S+$/.test(item.contactPersonEmail ?? ""))
+            errors.email = "Enter a valid email address";
+          return { isValid: Object.keys(errors).length === 0, errors };
+        },
+        title: (isEdit) => (isEdit ? "Edit Client" : "Add Client"),
+        submitText: (isEdit) => (isEdit ? "Save Changes" : "Create Client"),
+      },
+    };
+  }
+  buildColumns(): GridColDef[] {
+    return [
+      { field: "id", headerName: "ID", width: 100 },
+      { field: "clientName", headerName: "Client Name", flex: 1 },
+      { field: "clientEmail", headerName: "Client Email", flex: 1 },
+      { field: "contactPersonName", headerName: "Contact Person", flex: 1 },
+      { field: "contactPersonEmail", headerName: "Contact Email", flex: 1 },
+      { field: "contactPersonPhone", headerName: "Contact Phone", flex: 1 },
+      {
+        field: "actions",
+        type: "actions",
+        headerName: "Actions",
+        width: 100,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            onClick={() => this.handleEdit(params.row)}
+          />,
+        ],
+      },
+    ];
+  }
+  handleSubmit(item: AbstractEntity): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+}
