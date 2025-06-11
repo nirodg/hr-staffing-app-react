@@ -92,6 +92,7 @@ export default class StaffingList extends BaseDataTable<StaffingProcessDTO> {
         field: "status",
         headerName: "Status",
         flex: 1,
+        renderCell: (params) => <span>{params.value ? "In Progress" : "Completed"}</span>,
       },
       {
         field: "actions",
