@@ -1,6 +1,6 @@
 import { ClientDTO } from "./types/client-entity";
 import { UserDTO } from "./types/user-entity";
-
+import { StaffingProcessDTO } from "./types/staffing-entity";
 export const mockClient: ClientDTO = {
   id: 1,
   clientName: "Acme Corp",
@@ -24,4 +24,16 @@ export const mockEmployee: UserDTO = {
   createdAt: "2023-01-01",
   updatedAt: "2023-06-15",
   version: 1,
+};
+
+export const mockStaffingProcess: StaffingProcessDTO = {
+  id: 1,
+  status: "active",
+  createdAt: "2023-01-01",
+  updatedAt: "2023-06-15",
+  version: 1,
+  processName: "Initial Staffing",
+  client: mockClient,
+  employee: mockEmployee,
+  clientId: mockClient.id, // ?? Do we need this?
 };

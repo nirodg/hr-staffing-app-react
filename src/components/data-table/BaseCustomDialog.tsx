@@ -186,9 +186,6 @@ export abstract class BaseCustomDialog<
     const config = this.getConfig();
     const isEdit = !!this.props.initialData?.["id"];
 
-    console.log("Rendering BaseCustomDialog with config:");
-    console.log(this.getConfig());
-
     return (
       <Dialog
         open={open}

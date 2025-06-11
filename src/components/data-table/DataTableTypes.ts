@@ -1,4 +1,4 @@
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import { DialogConfig } from "./BaseCustomDialogTypes";
 
 /**
@@ -26,12 +26,12 @@ import { DialogConfig } from "./BaseCustomDialogTypes";
  * };
  * ```
  */
-export interface DataTableConfig<T> {
+export interface DataTableConfig<T extends GridValidRowModel> {
   /** The title displayed above the data table */
   title: string;
 
   /** Column definitions for the data grid */
-  columns: GridColDef[];
+  columns: TypedGridColDef<T>[];
 
   /** Initial data rows for the table */
   initialRows: T[];
@@ -51,3 +51,5 @@ export interface DataTableConfig<T> {
    */
   dialogConfig: DialogConfig<T>;
 }
+
+export type TypedGridColDef<T extends GridValidRowModel> = GridColDef<T, any, any>;

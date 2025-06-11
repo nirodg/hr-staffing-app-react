@@ -249,7 +249,7 @@ export default function MainContent() {
             }}
           />
         </Box> */}
-        <Box
+        {/* <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
             flexDirection: 'row',
@@ -262,7 +262,7 @@ export default function MainContent() {
           <IconButton size="small" aria-label="RSS feed">
             <RssFeedRoundedIcon />
           </IconButton>
-        </Box>
+        </Box> */}
       </Box>
       {/* <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, md: 6 }}>

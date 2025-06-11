@@ -4,6 +4,7 @@ import { CircularProgress, Box } from "@mui/material";
 import Page404 from "../pages/error/Page404"; // 404 page
 import BaseTemplate from "@/components/layout/BaseTemplate";
 import EmployeesList from "@/pages/employees/EmployeesList";
+import StaffingList from "@/pages/staffing/StaffingList";
 /* ----------------------------------------------------------------------------
  *  Lazy‑loaded pages (code‑splitting)
  * ------------------------------------------------------------------------- */
@@ -48,6 +49,13 @@ const AppRouter: React.FC = () => (
       <Routes>
         {/* Public routes ---------------------------------------------------- */}
         {/* <Route path="/login" element={lazyWrap(() => import("@/pages/Login"))} /> */}
+        <Route path="staffing" element={<BaseTemplate disableCustomTheme />}>
+          {
+            <Route index element={<StaffingList />} />
+            /*<Route path="new" element={<ClientForm key="new" />} />
+            <Route path=":id" element={<ClientForm />} /> */
+          }
+        </Route>
         <Route path="clients" element={<BaseTemplate disableCustomTheme />}>
           {
             <Route index element={<ClientsList />} />

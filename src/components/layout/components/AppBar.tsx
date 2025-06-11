@@ -62,7 +62,7 @@ export default function AppAppBar() {
           >
             <Sitemark />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button variant="text" color="info" size="small">
+              <Button variant="text" color="info" size="small" onClick={go("/staffing")}>
                 Staffing
               </Button>
               <Button variant="text" color="info" size="small" onClick={go("/clients")}>
@@ -71,15 +71,6 @@ export default function AppAppBar() {
               <Button variant="text" color="info" size="small" onClick={go("/employees")}>
                 Employees
               </Button>
-              <Button variant="text" color="info" size="small">
-                Settings
-              </Button>
-              {/* <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                FAQ
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                Blog
-              </Button> */}
             </Box>
           </Box>
           <Box
