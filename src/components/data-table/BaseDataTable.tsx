@@ -1,48 +1,62 @@
-import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import { DataTableConfig, DataTableState, DataTableActions } from './DataTableTypes';
-import BaseDataTableForm from './BaseCustomDialog';
-import DefaultDataTableForm from './DefaultBaseDataTableForm';
+import React from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataTableConfig } from "./DataTableTypes";
+import { DefaultDialog } from "./DefaultDialog";
+import { AbstractEntity } from "@/types/abstract-entity";
 
-abstract class BaseDataTable<T extends { id: any }> 
-  extends React.Component<{}, DataTableState<T>> 
-  implements DataTableActions<T> 
-{
-  // Abstract methods
+export abstract class BaseDataTable<
+  T extends { id: any }
+> extends React.Component<
+  {},
+  {
+    rows: T[];
+    formOpen: boolean;
+    currentItem: T | null;
+    loading: boolean;
+    error: string | null;
+  }
+> {
+  // Abstract methods to be implemented by child classes
   abstract getConfig(): DataTableConfig<T>;
-  abstract handleSubmit(item: T): Promise<void>;
-  
-  // Default state
-  state: DataTableState<T> = {
-    rows: this.getConfig().initialRows,
+  abstract handleSubmit(item: AbstractEntity): Promise<void>;
+
+  // Initial state
+  state = {
+    rows: [] as T[],
     formOpen: false,
-    currentItem: null,
+    currentItem: null as T | null,
     loading: false,
-    error: null
+    error: null as string | null,
   };
+
+  componentDidMount() {
+    // Initialize with config data
+    const { initialRows } = this.getConfig();
+    this.setState({ rows: initialRows });
+  }
 
   // Common handlers
   handleAdd = () => this.setState({ formOpen: true, currentItem: null });
-  handleEdit = (item: T) => this.setState({ formOpen: true, currentItem: item });
+  handleEdit = (item: T) =>
+    this.setState({ formOpen: true, currentItem: item });
   handleClose = () => this.setState({ formOpen: false });
 
-  // Form renderer
+  // Render the form dialog
   renderForm() {
     const config = this.getConfig();
     return (
-      <DefaultDataTableForm<T>
+      <DefaultDialog<T>
         open={this.state.formOpen}
         onClose={this.handleClose}
         onSubmit={this.handleSubmit}
         initialData={this.state.currentItem}
-        formTitle={config.formTitle}
-        submitButtonText={config.submitButtonText}
+        config={config.dialogConfig}
       />
     );
   }
 
-  // Main render
+  // Main render method
   render() {
     const config = this.getConfig();
     const { rows, loading } = this.state;
@@ -54,8 +68,12 @@ abstract class BaseDataTable<T extends { id: any }>
         </Typography>
 
         <Box sx={{ mb: 2 }}>
-          <Button variant="contained" onClick={this.handleAdd}>
-            {config.addButtonLabel || 'Add New'}
+          <Button
+            variant="contained"
+            onClick={this.handleAdd}
+            disabled={loading}
+          >
+            {config.addButtonLabel || "Add New"}
           </Button>
         </Box>
 
@@ -67,12 +85,22 @@ abstract class BaseDataTable<T extends { id: any }>
             pageSizeOptions={config.pageSizeOptions || [5, 10, 25]}
             initialState={{
               pagination: {
-                paginationModel: { 
-                  pageSize: config.defaultPageSize || 10 
+                paginationModel: {
+                  pageSize: config.defaultPageSize || 10,
                 },
               },
             }}
             disableRowSelectionOnClick
+            getRowId={(row) => row.id}
+            sx={{
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "primary.light",
+                color: "primary.contrastText",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "1px solid rgba(224, 224, 224, 0.5)",
+              },
+            }}
           />
         </Box>
 

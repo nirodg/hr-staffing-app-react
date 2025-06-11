@@ -1,28 +1,24 @@
-export interface DataTableFormProps<T> {
+
+export interface BaseDialogProps<T> {
   open: boolean;
   onClose: () => void;
   onSubmit: (item: T) => Promise<void>;
   initialData?: T | null;
+  config: DialogConfig<T>;
 }
 
 export interface FormFieldConfig<T> {
   name: keyof T;
   label: string;
-  type?: string;
+  type?: 'text' | 'email' | 'password' | 'number' | 'checkbox' | 'tel' | 'date';
   required?: boolean;
   fullWidth?: boolean;
   autoFocus?: boolean;
 }
 
-export interface DataTableFormConfig<T> {
+export interface DialogConfig<T> {
   fields: FormFieldConfig<T>[];
   validate: (item: T) => { isValid: boolean; errors: Record<string, string> };
-  formTitle: (isEdit: boolean) => string;
-  submitButtonText: (isEdit: boolean) => string;
-}
-
-export interface DataTableFormState<T> {
-  formData: T;
-  errors: Record<string, string>;
-  isSubmitting: boolean;
+  title: (isEdit: boolean) => string;
+  submitText: (isEdit: boolean) => string;
 }
