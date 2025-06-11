@@ -99,7 +99,7 @@ export abstract class BaseDataTable<
     const { rows, loading } = this.state;
 
     return (
-      <Box sx={{ height: "100%", width: "100%", p: 3 }}>
+      <Box sx={{ height: "100%", width: "100%" }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {config.title}
         </Typography>
@@ -129,15 +129,14 @@ export abstract class BaseDataTable<
             }}
             disableRowSelectionOnClick
             getRowId={(row) => row.id}
-            sx={{
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: "primary.light",
-                color: "primary.contrastText",
-              },
-              "& .MuiDataGrid-cell": {
-                borderBottom: "1px solid rgba(224, 224, 224, 0.5)",
-              },
-            }}
+          sx={{
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "rgba(0, 91, 150, 0.1)"
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "1px solid rgba(224, 224, 224, 0.5)",
+            },
+          }}
           />
         </Box>
 
