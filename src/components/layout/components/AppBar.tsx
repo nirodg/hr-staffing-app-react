@@ -9,15 +9,11 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from ".././ColorModeIconDropdown";
 import Sitemark from "./SitemarkIcon";
 import { useNavigate } from "react-router-dom";
-import DarkModeDropdown from "./DarkModeDropdown";
 import { useColorScheme } from "@mui/material/styles";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
